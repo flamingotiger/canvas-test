@@ -6,6 +6,7 @@ import DragArea from "./utils/DragArea";
 import Vector from "./base/Vector";
 import Dimension from "./base/Dimension";
 import DrawRect from "./utils/DrawRect";
+import MultiSelect from "./utils/MultiSelect";
 
 function App() {
   const canvasRef = useRef(null);
@@ -19,10 +20,15 @@ function App() {
       { vector: [330, 240], dimension: [320, 200] },
       { vector: [440, 450], dimension: [120, 300] },
     ].forEach((r) => {
-      const a = new DrawRect(new Vector(...r.vector), new Dimension(...r.dimension));
+      const a = new DrawRect(
+        new Vector(...r.vector),
+        new Dimension(...r.dimension)
+      );
       canvas.entityManager.addEntity(a);
     });
+    const multiSelect = new MultiSelect(new Vector(0, 0));
     canvas.entityManager.addEntity(dragArea);
+    canvas.entityManager.addEntity(multiSelect);
     canvas.play();
     return () => canvas.pause();
   }, [canvasRef]);

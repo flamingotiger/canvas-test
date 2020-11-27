@@ -12,10 +12,8 @@ export default class Rect extends Shape {
   update(delta) {}
 
   render(ctx) {
-    ctx.beginPath();
     ctx.rect(this.x, this.y, this.w, this.h);
     ctx.fill();
     ctx.stroke();
-    ctx.closePath();
   }
 }

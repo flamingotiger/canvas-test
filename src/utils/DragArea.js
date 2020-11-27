@@ -1,6 +1,5 @@
 import Canvas from "../base/Canvas";
 import Entity from "../base/Entity";
-import DrawRect from "./DrawRect";
 
 export default class DragArea extends Entity {
   constructor(position) {
@@ -14,9 +13,6 @@ export default class DragArea extends Entity {
 
   render(ctx) {
     if (!Canvas.instance.isPressed) {
-      return;
-    }
-    if(DrawRect.instance.isMovement){
       return;
     }
     ctx.beginPath();

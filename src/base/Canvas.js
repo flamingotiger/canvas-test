@@ -8,8 +8,12 @@ export default class Canvas {
   startPosition = new Vector(0, 0);
   currentPosition = new Vector(0, 0);
   endPosition = new Vector(0, 0);
-  movementPosition = new Vector(0, 0);
   selectedObjects = [];
+
+  // Multi select
+  selectedObjectsMinPosition = new Vector(0, 0);
+  selectedObjectsMaxPosition = new Vector(0, 0);
+  isMultiSelected = false;
 
   constructor(ref) {
     Canvas.instance = this;
@@ -23,14 +27,9 @@ export default class Canvas {
   onMouseDown = (e) => {
     this.isPressed = true;
     this.startPosition = new Vector(e.offsetX, e.offsetY);
-
-    for (let i = 0; i < this.selectedObjects.length; i++) {
-      this.selectedObjects[i].isMovement = true;
-    }
   };
 
   onMouseMove = (e) => {
-    this.movementPosition = new Vector(e.movementX, e.movementY);
     this.currentPosition = new Vector(e.offsetX, e.offsetY);
   };
 
@@ -98,11 +97,33 @@ export default class Canvas {
 
     for (let i = 0; i < objects.length; i++) {
       objects[i].isSelected = false;
+      this.isMultiSelected = false;
+      this.selectedObjectsMinPosition = new Vector(0, 0);
+      this.selectedObjectsMaxPosition = new Vector(0, 0);
     }
 
     for (let i = 0; i < this.selectedObjects.length; i++) {
       this.selectedObjects[i].isSelected = true;
-      this.selectedObjects[i].isMovement = false;
+
+      this.isMultiSelected = true;
+      const selectedX = this.selectedObjects[i].position.x;
+      const selectedY = this.selectedObjects[i].position.y;
+      const selectedW = this.selectedObjects[i].dimension.w;
+      const selectedH = this.selectedObjects[i].dimension.h;
+
+      if (this.selectedObjectsMinPosition.x === 0)
+        this.selectedObjectsMinPosition.x = selectedX;
+      if (this.selectedObjectsMinPosition.y === 0)
+        this.selectedObjectsMinPosition.y = selectedY;
+
+      this.selectedObjectsMinPosition = new Vector(
+        Math.min(selectedX, this.selectedObjectsMinPosition.x),
+        Math.min(selectedY, this.selectedObjectsMinPosition.y)
+      );
+      this.selectedObjectsMaxPosition = new Vector(
+        Math.max(selectedX + selectedW, this.selectedObjectsMaxPosition.x),
+        Math.max(selectedY + selectedH, this.selectedObjectsMaxPosition.y)
+      );
     }
   };
 
